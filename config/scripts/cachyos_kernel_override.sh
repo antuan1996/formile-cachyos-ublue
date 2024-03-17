@@ -6,10 +6,13 @@
 set -oue pipefail
 
 # Your code goes here.
+echo 'Enable SElinux policy'
+setsebool -P domain_kernel_load_modules on
+
 echo 'CachyOS kernel override'
 rpm-ostree cliwrap install-to-root / && \
 rpm-ostree override remove kernel kernel-core kernel-modules kernel-modules-core kernel-modules-extra --install kernel-cachyos    
-# rpm-ostree install kernel-cachyos-lts-devel
 
-# rpm-ostree install libcap-ng-devel procps-ng-devel uksmd-lts
-# systemctl enable uksmd.service
+echo 'Install uksmd'
+rpm-ostree install libcap-ng-devel procps-ng-devel uksmd
+systemctl enable uksmd.service
